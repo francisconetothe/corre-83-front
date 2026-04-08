@@ -1,22 +1,19 @@
 @import "tailwindcss";
 
+/* Suas variáveis e estilos do Correria 83 abaixo */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  /* Mudamos para branco para seguir o estilo Clean que o cliente quer */
+  --foreground: #27354c;
+  /* Azul Marinho para os textos */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Se você definiu cores no tailwind.config.ts, o Tailwind v4 as reconhecerá. 
+   Mas no v4 você também pode definir direto no CSS assim: */
+@theme {
+  --color-brand-blue: #00a2ff;
+  --color-brand-navy: #27354c;
+  --color-brand-light: #f8fafc;
 }
 
 body {
