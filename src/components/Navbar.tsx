@@ -1,20 +1,29 @@
 "use client";
 
-import { Menu, X, ShoppingBag, Trophy, Users, Calendar, Newspaper, Handshake } from 'lucide-react';
-import { useState, useEffect } from 'react'; 
-import api from '@/services/api'; 
-import Link from 'next/link';
+import {
+  Menu,
+  X,
+  ShoppingBag,
+  Trophy,
+  Users,
+  Calendar,
+  Newspaper,
+  Handshake,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import api from "@/services/api";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [logoUrl, setLogoUrl] = useState(''); 
+  const [logoUrl, setLogoUrl] = useState("");
 
   useEffect(() => {
     async function loadSettings() {
       try {
-        // 🛠️ Removido o 'http://localhost:3001'. 
+        // 🛠️ Removido o 'http://localhost:3001'.
         // Agora o axios usa automaticamente o baseURL configurado no services/api.ts
-        const response = await api.get('/settings/banner');
+        const response = await api.get("/settings/banner");
         if (response.data && response.data.logoUrl) {
           setLogoUrl(response.data.logoUrl);
         }
@@ -26,24 +35,31 @@ export default function Navbar() {
   }, []);
 
   const menuItems = [
-    { name: 'Quem somos', href: '/#quem-somos', icon: <Users size={18} /> },
-    { name: 'Nossos planos', href: '/#planos', icon: <Trophy size={18} /> },    
-    { name: 'Calendário de provas', href: '/provas', icon: <Calendar size={18} /> },
-    { name: 'Colunista', href: '/artigos', icon: <Newspaper size={18} /> },    
+    { name: "Quem somos", href: "/#quem-somos", icon: <Users size={18} /> },
+    { name: "Nossos planos", href: "/planos", icon: <Trophy size={18} /> },
+    {
+      name: "Calendário de provas",
+      href: "/provas",
+      icon: <Calendar size={18} />,
+    },
+    { name: "Colunista", href: "/artigos", icon: <Newspaper size={18} /> },
+    { name: "Parceiros", href: "/parceiros", icon: <Handshake size={18} /> }, // 👈 Novo item adicionado aqui!
   ];
 
   return (
     <nav className="w-full bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
-          
           {/* LOGO ENVOLVIDA PELO LINK PARA HOME */}
-          <Link href="/" className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity">
+          <Link
+            href="/"
+            className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity"
+          >
             {logoUrl ? (
-              <img 
-                src={logoUrl} 
-                alt="Logo Correria 83" 
-                className="h-20 w-auto object-contain p-2" 
+              <img
+                src={logoUrl}
+                alt="Logo Correria 83"
+                className="h-20 w-auto object-contain p-2"
               />
             ) : (
               <span className="text-2xl font-extrabold tracking-tighter italic text-brand-navy">
@@ -67,7 +83,10 @@ export default function Navbar() {
 
           {/* BOTÃO MOBILE */}
           <div className="xl:hidden flex items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-brand-navy p-2">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-brand-navy p-2"
+            >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>

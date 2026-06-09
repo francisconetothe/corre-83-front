@@ -1,23 +1,32 @@
-@import "tailwindcss";
+/* Importação padrão do Tailwind v3 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Suas variáveis e estilos do Correria 83 abaixo */
 :root {
   --background: #ffffff;
-  /* Mudamos para branco para seguir o estilo Clean que o cliente quer */
   --foreground: #27354c;
-  /* Azul Marinho para os textos */
 }
 
-/* Se você definiu cores no tailwind.config.ts, o Tailwind v4 as reconhecerá. 
-   Mas no v4 você também pode definir direto no CSS assim: */
-@theme {
-  --color-brand-blue: #00a2ff;
-  --color-brand-navy: #27354c;
-  --color-brand-light: #f8fafc;
-}
-
+/* No v3, as cores customizadas devem ir no arquivo tailwind.config.js.
+   Mas você ainda pode usar variáveis CSS aqui para aplicar no body */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Classes utilitárias personalizadas (opcional) */
+@layer components {
+  .bg-brand-blue {
+    background-color: #00a2ff;
+  }
+
+  .text-brand-navy {
+    color: #27354c;
+  }
+
+  .bg-brand-light {
+    background-color: #f8fafc;
+  }
 }
