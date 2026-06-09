@@ -3,18 +3,28 @@
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+// 1. 👇 Adicionamos o 'use' aqui
+import { useEffect, useState, use } from "react";
 import api from "@/services/api";
 import { ArrowLeft, Clock, UserCircle, Loader2 } from "lucide-react";
 
-export default function ColunistaPage({ params }: { params: { id: string } }) {
+// 2. 👇 Atualizamos o tipo para Promise<{ id: string }>
+export default function ColunistaPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // 3. 👇 Desempacotamos a promessa para pegar o ID
+  const { id } = use(params);
+
   const [colunista, setColunista] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadColunista() {
       try {
-        const response = await api.get(`/colunistas/${params.id}`);
+        // 👇 Agora usamos o 'id' direto aqui na URL
+        const response = await api.get(`/colunistas/${id}`);
         setColunista(response.data);
       } catch (error) {
         console.error("Erro ao carregar colunista.");
@@ -23,7 +33,7 @@ export default function ColunistaPage({ params }: { params: { id: string } }) {
       }
     }
     loadColunista();
-  }, [params.id]);
+  }, [id]); // 👇 E colocamos o 'id' na dependência
 
   if (loading) {
     return (
