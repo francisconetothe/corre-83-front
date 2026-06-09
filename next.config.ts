@@ -3,15 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   transpilePackages: ["lucide-react"],
 
-  // 👇 ADICIONE ESTAS DUAS REGRAS PARA A VERCEL NÃO TRAVAR
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // A regra do typescript continua válida, removemos apenas a do eslint
   typescript: {
     ignoreBuildErrors: true,
   },
 
   images: {
+    // 👇 A MÁGICA: Desliga a otimização de imagem APENAS no seu computador para o localhost funcionar
+    unoptimized: process.env.NODE_ENV === "development",
     remotePatterns: [
       {
         protocol: "https",
