@@ -118,10 +118,14 @@ export default function Home() {
       {/* 2. BOTÕES DE AÇÃO */}
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-center gap-6">
-          <button className="flex-1 min-w-[280px] max-w-sm bg-brand-blue text-white px-8 py-6 rounded-2xl font-black uppercase tracking-tighter italic text-xl shadow-xl hover:bg-brand-navy transition-all flex items-center justify-between group">
+          {/* 👇 Transformamos o button em Link e adicionamos o href */}
+          <Link
+            href="/planos"
+            className="flex-1 min-w-[280px] max-w-sm bg-brand-blue text-white px-8 py-6 rounded-2xl font-black uppercase tracking-tighter italic text-xl shadow-xl hover:bg-brand-navy transition-all flex items-center justify-between group"
+          >
             Nossos Planos
             <ArrowRight className="group-hover:translate-x-2 transition-transform" />
-          </button>
+          </Link>
 
           <Link
             href="/provas"
