@@ -53,6 +53,10 @@ export default function AdminDashboard() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewLogo, setPreviewLogo] = useState("");
   const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
+  // Imagens JÁ salvas no banco (pra mostrar miniatura + remover)
+  const [currentBanner, setCurrentBanner] = useState("");
+  const [currentLogo, setCurrentLogo] = useState("");
+  const [currentAbout, setCurrentAbout] = useState("");
   const [aboutText, setAboutText] = useState("");
   const [previewAbout, setPreviewAbout] = useState("");
   const [selectedAboutFile, setSelectedAboutFile] = useState<File | null>(null);
@@ -157,7 +161,12 @@ export default function AdminDashboard() {
   const loadInitialData = async () => {
     try {
       const response = await api.get("/settings/banner");
-      if (response.data) setAboutText(response.data.content || "");
+      if (response.data) {
+        setAboutText(response.data.content || "");
+        setCurrentBanner(response.data.imageUrl || "");
+        setCurrentLogo(response.data.logoUrl || "");
+        setCurrentAbout(response.data.aboutImageUrl || "");
+      }
     } catch (error) {
       console.error("Erro ao carregar dados iniciais");
     }
@@ -507,6 +516,40 @@ export default function AdminDashboard() {
     }
   };
 
+  // --- HANDLERS DE REMOVER IMAGENS ATUAIS ---
+  const handleDeleteBanner = async () => {
+    if (!confirm("Remover o banner atual do site?")) return;
+    try {
+      await api.delete("/settings/banner");
+      setCurrentBanner("");
+      alert("Banner removido!");
+    } catch (error) {
+      alert("Erro ao remover banner.");
+    }
+  };
+
+  const handleDeleteLogo = async () => {
+    if (!confirm("Remover a logo atual do site?")) return;
+    try {
+      await api.delete("/settings/logo");
+      setCurrentLogo("");
+      alert("Logo removida!");
+    } catch (error) {
+      alert("Erro ao remover logo.");
+    }
+  };
+
+  const handleDeleteAbout = async () => {
+    if (!confirm("Remover a foto atual?")) return;
+    try {
+      await api.delete("/settings/about-image");
+      setCurrentAbout("");
+      alert("Foto removida!");
+    } catch (error) {
+      alert("Erro ao remover foto.");
+    }
+  };
+
   const clearSelection = () => {
     setPreviewUrl("");
     setSelectedFile(null);
@@ -618,6 +661,29 @@ export default function AdminDashboard() {
               </a>
             </header>
             <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-zinc-100 space-y-8">
+              {/* BANNER ATUAL */}
+              {currentBanner && !previewUrl && (
+                <div className="flex items-center justify-between p-4 bg-brand-light rounded-2xl">
+                  <div className="flex items-center gap-4">
+                    <div className="w-32 h-20 rounded-xl overflow-hidden border-2 border-zinc-200 shrink-0">
+                      <img
+                        src={currentBanner}
+                        className="w-full h-full object-cover"
+                        alt="Banner atual"
+                      />
+                    </div>
+                    <span className="text-xs font-bold uppercase text-zinc-400">
+                      Banner atual
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleDeleteBanner}
+                    className="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-xl font-bold text-xs uppercase transition-colors"
+                  >
+                    <Trash2 size={16} /> Remover
+                  </button>
+                </div>
+              )}
               <div
                 onClick={() => fileInputRef.current?.click()}
                 className="flex items-center gap-4 p-4 bg-brand-light rounded-2xl border-2 border-dashed border-zinc-200 cursor-pointer"
@@ -627,6 +693,9 @@ export default function AdminDashboard() {
                   Selecionar Banner
                 </p>
               </div>
+              <p className="text-xs text-zinc-400 font-medium px-1">
+                📐 Resolução ideal: 1920px × 750px (formato horizontal)
+              </p>
               {previewUrl && (
                 <div className="relative w-48 h-28 rounded-xl overflow-hidden border-2 border-brand-blue shadow-lg">
                   <img
@@ -672,6 +741,29 @@ export default function AdminDashboard() {
               </h1>
             </header>
             <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-zinc-100 space-y-8">
+              {/* LOGO ATUAL */}
+              {currentLogo && !previewLogo && (
+                <div className="flex items-center justify-between p-4 bg-brand-light rounded-2xl">
+                  <div className="flex items-center gap-4">
+                    <div className="p-4 bg-brand-navy rounded-xl shrink-0">
+                      <img
+                        src={currentLogo}
+                        className="h-12 w-auto object-contain"
+                        alt="Logo atual"
+                      />
+                    </div>
+                    <span className="text-xs font-bold uppercase text-zinc-400">
+                      Logo atual
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleDeleteLogo}
+                    className="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-xl font-bold text-xs uppercase transition-colors"
+                  >
+                    <Trash2 size={16} /> Remover
+                  </button>
+                </div>
+              )}
               <div
                 onClick={() => logoInputRef.current?.click()}
                 className="flex items-center gap-4 p-4 bg-brand-light rounded-2xl border-2 border-dashed border-zinc-200 cursor-pointer"
@@ -733,6 +825,29 @@ export default function AdminDashboard() {
                 className="w-full p-4 bg-brand-light rounded-2xl border-2 border-zinc-100 outline-none focus:border-brand-blue font-medium text-zinc-600"
                 placeholder="Conte sobre a assessoria..."
               />
+              {/* FOTO ATUAL - QUEM SOMOS */}
+              {currentAbout && !previewAbout && (
+                <div className="flex items-center justify-between p-4 bg-brand-light rounded-2xl">
+                  <div className="flex items-center gap-4">
+                    <div className="w-32 h-20 rounded-xl overflow-hidden border-2 border-zinc-200 shrink-0">
+                      <img
+                        src={currentAbout}
+                        className="w-full h-full object-cover"
+                        alt="Foto atual"
+                      />
+                    </div>
+                    <span className="text-xs font-bold uppercase text-zinc-400">
+                      Foto atual
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleDeleteAbout}
+                    className="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-xl font-bold text-xs uppercase transition-colors"
+                  >
+                    <Trash2 size={16} /> Remover
+                  </button>
+                </div>
+              )}
               <div
                 onClick={() => aboutInputRef.current?.click()}
                 className="flex items-center gap-4 p-4 bg-brand-light rounded-2xl border-2 border-dashed border-zinc-200 cursor-pointer"
@@ -742,6 +857,10 @@ export default function AdminDashboard() {
                   Selecionar Foto Lateral
                 </p>
               </div>
+              <p className="text-xs text-zinc-400 font-medium px-1">
+                📐 Resolução recomendada: 1280px × 720px (proporção 16:9,
+                horizontal)
+              </p>
               {previewAbout && (
                 <div className="relative w-48 h-28 rounded-xl overflow-hidden border-2 border-brand-blue shadow-lg">
                   <img
