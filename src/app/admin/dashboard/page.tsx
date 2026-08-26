@@ -1209,6 +1209,57 @@ export default function AdminDashboard() {
                 Publicar Artigo
               </button>
             </form>
+
+            {/* LISTA DE ARTIGOS PUBLICADOS */}
+            <h2 className="text-2xl font-black text-brand-navy italic uppercase mb-6">
+              Artigos Publicados
+            </h2>
+            <div className="space-y-4">
+              {artigos.length > 0 ? (
+                artigos.map((artigo) => (
+                  <div
+                    key={artigo.id}
+                    className="bg-white p-6 rounded-[2rem] shadow-sm border border-zinc-100 flex justify-between items-center group"
+                  >
+                    <div className="flex items-center gap-6">
+                      {artigo.imageUrl ? (
+                        <img
+                          src={artigo.imageUrl}
+                          alt={artigo.title}
+                          className="w-16 h-16 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-brand-light rounded-xl flex items-center justify-center text-brand-blue">
+                          <ImageIcon size={24} />
+                        </div>
+                      )}
+                      <div>
+                        <h4 className="text-brand-navy font-black uppercase italic text-lg">
+                          {artigo.title}
+                        </h4>
+                        {artigo.columnist?.name && (
+                          <p className="text-zinc-400 font-bold uppercase text-[10px]">
+                            Por {artigo.columnist.name}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteArtigo(artigo.id)}
+                      className="p-3 text-red-400 hover:bg-red-50 rounded-xl transition-all"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-20 bg-white rounded-[2rem] border-2 border-dashed border-zinc-100">
+                  <p className="text-zinc-400 font-bold italic uppercase text-xs">
+                    Nenhum artigo publicado
+                  </p>
+                </div>
+              )}
+            </div>
           </section>
         )}
 
@@ -1396,6 +1447,10 @@ export default function AdminDashboard() {
                         <span className="text-[10px] font-bold text-zinc-400 uppercase">
                           Logo da Marca
                         </span>
+                        <p className="text-xs text-zinc-400 font-medium px-1">
+                          📐 Envie o logo quadrado (800x800px), PNG com fundo
+                          transparente
+                        </p>
                       </>
                     )}
                   </div>

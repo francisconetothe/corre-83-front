@@ -166,6 +166,18 @@ export default function Home() {
                 </>
               )}
             </p>
+
+            {/* BOTÃO AULA EXPERIMENTAL */}
+            <a
+              href={`https://wa.me/558399364998?text=${encodeURIComponent(
+                "Olá! Gostaria de agendar uma aula experimental no Correria 83.",
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-8 px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-black italic uppercase rounded-full shadow-lg hover:scale-105 transition-all duration-300"
+            >
+              Agende sua aula experimental
+            </a>
           </div>
           <div className="aspect-video bg-white rounded-3xl flex items-center justify-center border border-zinc-100 shadow-2xl relative overflow-hidden">
             {aboutData.aboutImageUrl ? (
@@ -476,9 +488,9 @@ export default function Home() {
                   href={parceiro.website || parceiro.link || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-brand-light/30 border border-zinc-100 rounded-[2rem] p-6 flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300 group cursor-pointer block"
+                  className="bg-brand-light/30 border border-zinc-100 rounded-[2rem] overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 group cursor-pointer"
                 >
-                  <div className="relative w-24 h-24 rounded-full overflow-hidden bg-white mb-4 border-4 border-white shadow-sm group-hover:scale-105 transition-transform flex shrink-0 items-center justify-center">
+                  <div className="relative w-full aspect-square bg-white overflow-hidden">
                     {parceiro.logoUrl ? (
                       <Image
                         src={
@@ -488,13 +500,15 @@ export default function Home() {
                         }
                         alt={parceiro.name}
                         fill
-                        className="object-cover p-2"
+                        className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <Handshake size={32} className="text-brand-navy/20" />
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Handshake size={48} className="text-brand-navy/20" />
+                      </div>
                     )}
                   </div>
-                  <h3 className="text-[11px] font-black text-brand-navy uppercase italic group-hover:text-brand-blue transition-colors line-clamp-2">
+                  <h3 className="text-xs font-black text-brand-navy uppercase italic group-hover:text-brand-blue transition-colors line-clamp-2 text-center p-4">
                     {parceiro.name}
                   </h3>
                 </a>
@@ -535,7 +549,9 @@ export default function Home() {
 
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href="#"
+              href="https://instagram.com/correria83"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-3 bg-white border border-zinc-100 px-8 py-4 rounded-2xl shadow-sm hover:shadow-xl hover:border-brand-blue transition-all group"
             >
               <Camera
@@ -548,6 +564,8 @@ export default function Home() {
             </a>
             <a
               href="#"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-3 bg-white border border-zinc-100 px-8 py-4 rounded-2xl shadow-sm hover:shadow-xl hover:border-brand-blue transition-all group"
             >
               <Play
