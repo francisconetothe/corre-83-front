@@ -37,6 +37,7 @@ export default function AdminDashboard() {
 
   // Referências
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const aboutInputRef = useRef<HTMLInputElement>(null);
   const provaFotoInputRef = useRef<HTMLInputElement>(null);
@@ -55,6 +56,9 @@ export default function AdminDashboard() {
   const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
   // Imagens JÁ salvas no banco (pra mostrar miniatura + remover)
   const [currentBanner, setCurrentBanner] = useState("");
+  const [previewMobile, setPreviewMobile] = useState("");
+  const [selectedMobile, setSelectedMobile] = useState<File | null>(null);
+  const [currentMobileBanner, setCurrentMobileBanner] = useState("");
   const [currentLogo, setCurrentLogo] = useState("");
   const [currentAbout, setCurrentAbout] = useState("");
   const [aboutText, setAboutText] = useState("");
@@ -164,6 +168,7 @@ export default function AdminDashboard() {
       if (response.data) {
         setAboutText(response.data.content || "");
         setCurrentBanner(response.data.imageUrl || "");
+        setCurrentMobileBanner(response.data.mobileImageUrl || "");
         setCurrentLogo(response.data.logoUrl || "");
         setCurrentAbout(response.data.aboutImageUrl || "");
       }
@@ -271,6 +276,44 @@ export default function AdminDashboard() {
       alert("Erro ao subir banner.");
     } finally {
       setLoadingSave(false);
+    }
+  };
+
+  // --- HANDLERS BANNER MOBILE ---
+  const handleMobileFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedMobile(file);
+      setPreviewMobile(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSaveMobileBanner = async () => {
+    if (!selectedMobile) return;
+    setLoadingSave(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedMobile);
+      await api.post("/settings/banner-mobile", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      alert("Banner mobile enviado!");
+      window.location.reload();
+    } catch (error) {
+      alert("Erro ao subir banner mobile.");
+    } finally {
+      setLoadingSave(false);
+    }
+  };
+
+  const handleDeleteMobileBanner = async () => {
+    if (!confirm("Remover o banner mobile atual?")) return;
+    try {
+      await api.delete("/settings/banner-mobile");
+      setCurrentMobileBanner("");
+      alert("Banner mobile removido!");
+    } catch (error) {
+      alert("Erro ao remover banner mobile.");
     }
   };
 
@@ -727,6 +770,84 @@ export default function AdminDashboard() {
                   <Loader2 className="animate-spin mx-auto" size={20} />
                 ) : (
                   "Publicar no Site"
+                )}
+              </button>
+            </div>
+
+            {/* CARD BANNER MOBILE */}
+            <h2 className="text-xl font-black text-brand-navy italic uppercase mt-12 mb-4">
+              Banner Mobile
+            </h2>
+            <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-zinc-100 space-y-8">
+              {/* BANNER MOBILE ATUAL */}
+              {currentMobileBanner && !previewMobile && (
+                <div className="flex items-center justify-between p-4 bg-brand-light rounded-2xl">
+                  <div className="flex items-center gap-4">
+                    <div className="w-20 h-28 rounded-xl overflow-hidden border-2 border-zinc-200 shrink-0">
+                      <img
+                        src={currentMobileBanner}
+                        className="w-full h-full object-cover"
+                        alt="Banner mobile atual"
+                      />
+                    </div>
+                    <span className="text-xs font-bold uppercase text-zinc-400">
+                      Banner mobile atual
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleDeleteMobileBanner}
+                    className="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-xl font-bold text-xs uppercase transition-colors"
+                  >
+                    <Trash2 size={16} /> Remover
+                  </button>
+                </div>
+              )}
+              <div
+                onClick={() => mobileInputRef.current?.click()}
+                className="flex items-center gap-4 p-4 bg-brand-light rounded-2xl border-2 border-dashed border-zinc-200 cursor-pointer"
+              >
+                <Upload size={20} className="text-brand-blue" />
+                <p className="text-brand-navy font-black italic uppercase text-sm">
+                  Selecionar Banner Mobile
+                </p>
+              </div>
+              <p className="text-xs text-zinc-400 font-medium px-1">
+                📐 Resolução ideal: 1080px × 1350px (formato vertical)
+              </p>
+              {previewMobile && (
+                <div className="relative w-28 h-40 rounded-xl overflow-hidden border-2 border-brand-blue shadow-lg">
+                  <img
+                    src={previewMobile}
+                    className="w-full h-full object-cover"
+                    alt="Preview mobile"
+                  />
+                  <button
+                    onClick={() => {
+                      setPreviewMobile("");
+                      setSelectedMobile(null);
+                    }}
+                    className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-lg"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              )}
+              <input
+                type="file"
+                ref={mobileInputRef}
+                onChange={handleMobileFileChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <button
+                onClick={handleSaveMobileBanner}
+                disabled={loadingSave || !selectedMobile}
+                className="w-full bg-brand-navy text-white py-4 rounded-2xl font-black uppercase italic shadow-lg"
+              >
+                {loadingSave ? (
+                  <Loader2 className="animate-spin mx-auto" size={20} />
+                ) : (
+                  "Publicar Banner Mobile"
                 )}
               </button>
             </div>

@@ -20,6 +20,7 @@ import {
 export default function Home() {
   // Estados para os dados dinâmicos do banco
   const [bannerUrl, setBannerUrl] = useState("");
+  const [bannerMobileUrl, setBannerMobileUrl] = useState("");
   const [provas, setProvas] = useState<any[]>([]);
   const [artigos, setArtigos] = useState<any[]>([]);
   const [colunistas, setColunistas] = useState<any[]>([]);
@@ -38,6 +39,8 @@ export default function Home() {
         if (responseSettings.data) {
           if (responseSettings.data.imageUrl)
             setBannerUrl(responseSettings.data.imageUrl);
+          if (responseSettings.data.mobileImageUrl)
+            setBannerMobileUrl(responseSettings.data.mobileImageUrl);
           setAboutData({
             content: responseSettings.data.content || "",
             aboutImageUrl: responseSettings.data.aboutImageUrl || "",
@@ -96,15 +99,31 @@ export default function Home() {
 
       {/* 1. BANNER DINÂMICO */}
       <section className="relative w-full h-[50vh] md:h-[70vh] lg:h-[80vh] overflow-hidden bg-brand-navy">
-        {bannerUrl ? (
-          <Image
-            src={bannerUrl}
-            alt="Banner Correria 83"
-            fill
-            priority
-            className="object-cover object-center animate-in fade-in duration-700"
-            sizes="100vw"
-          />
+        {bannerUrl || bannerMobileUrl ? (
+          <>
+            {/* Desktop */}
+            <div className="hidden md:block absolute inset-0">
+              <Image
+                src={bannerUrl || bannerMobileUrl}
+                alt="Banner Correria 83"
+                fill
+                priority
+                className="object-cover object-center animate-in fade-in duration-700"
+                sizes="100vw"
+              />
+            </div>
+            {/* Mobile */}
+            <div className="block md:hidden absolute inset-0">
+              <Image
+                src={bannerMobileUrl || bannerUrl}
+                alt="Banner Correria 83"
+                fill
+                priority
+                className="object-cover object-center animate-in fade-in duration-700"
+                sizes="100vw"
+              />
+            </div>
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center opacity-20">
             <span className="text-white font-black italic text-9xl tracking-tighter">
@@ -112,7 +131,6 @@ export default function Home() {
             </span>
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent"></div>
       </section>
 
       {/* 2. BOTÕES DE AÇÃO */}
