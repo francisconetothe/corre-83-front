@@ -103,11 +103,11 @@ export default function AdminDashboard() {
     null,
   );
   const [novoParceiro, setNovoParceiro] = useState({
-    name: "",
-    category: "",
-    description: "",
-    link: "",
-  });
+  name: "",
+  link: "",
+  whatsapp: "",
+  instagram: "",
+});
 
   // --- NOVOS ESTADOS PARA COLUNISTAS ---
   const [colunistas, setColunistas] = useState<any[]>([]);
@@ -441,17 +441,16 @@ export default function AdminDashboard() {
     }
   };
 
-  // --- FUNÇÃO SALVAR PARCEIRO ---
+    // --- FUNÇÃO SALVAR PARCEIRO ---
   const handleSaveParceiro = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoadingSave(true);
     try {
       const formData = new FormData();
       formData.append("name", novoParceiro.name);
-
-      // Mudança de nomes para bater com seu banco!
-      formData.append("website", novoParceiro.link); // Manda como website
-      // Como o banco não tem 'category' e 'description', nós não mandamos eles.
+      formData.append("website", novoParceiro.link);
+      formData.append("whatsapp", novoParceiro.whatsapp);
+      formData.append("instagram", novoParceiro.instagram);
 
       if (selectedParceiroFile) formData.append("file", selectedParceiroFile);
 
@@ -459,7 +458,12 @@ export default function AdminDashboard() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Parceiro cadastrado com sucesso!");
-      setNovoParceiro({ name: "", category: "", description: "", link: "" });
+      setNovoParceiro({
+        name: "",
+        link: "",
+        whatsapp: "",
+        instagram: "",
+      });
       setPreviewParceiro("");
       setSelectedParceiroFile(null);
       loadParceiros();
@@ -1593,38 +1597,31 @@ export default function AdminDashboard() {
                       setNovoParceiro({ ...novoParceiro, name: e.target.value })
                     }
                     required
-                  />
-                  <input
+                  />                  
+                 
+
+                                    <input
                     type="text"
-                    placeholder="Categoria (Ex: Equipamentos, Nutrição)"
-                    className="w-full p-3 bg-brand-light rounded-xl border-none outline-none focus:ring-2 ring-brand-blue"
-                    value={novoParceiro.category}
-                    onChange={(e) =>
-                      setNovoParceiro({
-                        ...novoParceiro,
-                        category: e.target.value,
-                      })
-                    }
-                  />
-                  <textarea
-                    placeholder="Breve descrição da parceria..."
+                    placeholder="WhatsApp (só números: 5583999999999)"
                     className="w-full p-3 bg-brand-light rounded-xl border-none outline-none focus:ring-2 ring-brand-blue text-xs"
-                    rows={3}
-                    value={novoParceiro.description}
+                    value={novoParceiro.whatsapp}
                     onChange={(e) =>
                       setNovoParceiro({
                         ...novoParceiro,
-                        description: e.target.value,
+                        whatsapp: e.target.value,
                       })
                     }
                   />
                   <input
                     type="url"
-                    placeholder="Link do Parceiro (Instagram, Site...)"
+                    placeholder="Instagram (https://instagram.com/perfil)"
                     className="w-full p-3 bg-brand-light rounded-xl border-none outline-none focus:ring-2 ring-brand-blue text-xs"
-                    value={novoParceiro.link}
+                    value={novoParceiro.instagram}
                     onChange={(e) =>
-                      setNovoParceiro({ ...novoParceiro, link: e.target.value })
+                      setNovoParceiro({
+                        ...novoParceiro,
+                        instagram: e.target.value,
+                      })
                     }
                   />
 
